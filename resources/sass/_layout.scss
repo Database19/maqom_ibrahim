@@ -1,0 +1,61 @@
+.wrapper {
+  width: 100%;
+  @include ltr-rtl("padding-left", var(--cui-sidebar-occupy-start, 0));
+  will-change: auto;
+  @include transition(padding .15s);
+}
+
+.sidebar-nav {
+  overflow-y: auto; // Menambahkan scroll vertikal
+  max-height: 100vh; // Tinggi maksimal sesuai dengan tinggi viewport
+  scrollbar-width: thin; // Membuat scrollbar lebih tipis
+  scrollbar-color: #94c2ff #ffffff; // Mengubah warna scrollbar
+
+  li.nav-item {
+    a.nav-link {
+      color: #ffffff; // Warna default untuk link
+      &:hover {
+        color: #94c2ff; // Warna saat hover
+      }
+      svg.nav-icon {
+        fill: currentColor; // Warna ikon sesuai dengan warna teks
+      }
+    }
+  }
+
+  li.nav-group {
+    a.nav-link.nav-group-toggle {
+      color: #ffffff; // Warna untuk link grup
+      &:hover {
+        color: #94c2ff; // Warna saat hover untuk link grup
+      }
+      cursor: pointer;
+      transition: color 0.3s ease;
+    }
+
+    ul.nav-group-items {
+      display: none; // Sembunyikan secara default
+      overflow: hidden;
+      max-height: 0;
+      transition: max-height 0.5s ease-out, opacity 0.5s ease-out; // Menambahkan transisi opacity
+      opacity: 0; // Set opacity menjadi 0 saat tertutup
+      li.nav-item {
+        a {
+          color: #dddddd; // Warna untuk sub-item
+          &:hover {
+            color: #94c2ff; // Warna saat hover untuk sub-item
+          }
+        }
+      }
+    }
+  }
+
+  // Animasi untuk membuka dan menutup item grup
+  li.nav-group[aria-expanded="true"] .nav-group-items {
+    display: block;
+    max-height: 500px; // Tinggi maksimal yang cukup untuk menampung semua sub-item
+    transition: max-height 0.5s ease-in, opacity 0.5s ease-in; // Menambahkan transisi opacity
+    opacity: 1; // Set opacity menjadi 1 saat terbuka
+  }
+}
+
