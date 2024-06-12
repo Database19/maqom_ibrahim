@@ -3,10 +3,10 @@
 @section('content')
 <div class="row">
     <div class="col-sm-11">
-        <h1>{{ __('Buku Tamu') }}</h1>
+        <h1>{{ __('Daftar Jamaah') }}</h1>
     </div>
     <div class="col-sm-1">
-        <a href="{{ route('buku-tamu.create') }}" style="margin-top: 20px" class="btn btn-sm btn-primary float-right">Tambah</a>
+        <a href="{{ route('daftar-jamaah.create') }}" style="margin-top: 20px" class="btn btn-sm btn-primary float-right">Tambah</a>
     </div>
 </div>
 <br>
@@ -34,13 +34,13 @@
                         @endif
                     @endforeach
                     <td style="text-align: center">
-                        <a href="{{ route('buku-tamu.show', $jamaah['id']) }}" class="btn btn-sm btn-secondary">View</a>
-                        <a href="{{ route('buku-tamu.edit', $jamaah['id']) }}" class="btn btn-sm btn-info">Edit</a>
-                        <form action="{{ route('buku-tamu.destroy', $jamaah['id']) }}" method="POST" style="display:inline;">
+                        <a href="{{ route('daftar-jamaah.show', $jamaah['id']) }}" class="btn btn-sm btn-secondary">View</a>
+                        {{-- <a href="{{ route('daftar-jamaah.edit', $jamaah['id']) }}" class="btn btn-sm btn-info">Edit</a>
+                        <form action="{{ route('daftar-jamaah.destroy', $jamaah['id']) }}" method="POST" style="display:inline;">
                             @csrf
                             @method('DELETE')
                             <button type="submit" class="btn btn-sm btn-danger">Delete</button>
-                        </form>
+                        </form> --}}
                     </td>
                 </tr>
             @endforeach

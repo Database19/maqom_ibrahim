@@ -18,7 +18,7 @@ class Jamaah extends Model
         'nama_lengkap',
         'jenis_kelamin',
         'status_pernikahan',
-        'nama_foto',
+        'foto',
         'tempat_lahir',
         'tanggal_lahir',
         'usia',
@@ -44,8 +44,10 @@ class Jamaah extends Model
         'nama_bagian',
         'profesi',
         'members',
+        'status',
         'is_register',
-        'is_deleted',];
+        'is_deleted',
+    ];
 
     // protected $primaryKey = 'id';
     public $incrementing = false;

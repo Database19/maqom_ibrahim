@@ -17,11 +17,11 @@
         </a>
         <ul class="nav-group-items" style="height: 0px;">
             <li class="nav-item">
-                <a class="nav-link" href="{{ route('buku-tamu.index') }}" target="_top">
+                <a class="nav-link" href="{{ route('daftar-jamaah.index') }}" target="_top">
                     <svg class="nav-icon">
                         <use xlink:href="{{ asset('icons/coreui.svg#cil-pen') }}"></use>
                     </svg>
-                    Buku Tamu
+                    Daftar Jamaah
                 </a>
             </li>
             <li class="nav-item">
@@ -327,7 +327,7 @@
                     <svg class="nav-icon">
                         <use xlink:href="{{ asset('icons/coreui.svg#cil-book') }}"></use>
                     </svg>
-                    Buku Tamu
+                    Daftar Jamaah
                 </a>
             </li>
         </ul>

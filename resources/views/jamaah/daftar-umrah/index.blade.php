@@ -11,12 +11,12 @@
 </div>
 <br>
 {{-- <div class="card-body"> --}}
-@if ($jamaahs && $jamaahs->first())
+@if ($daftarUmrah && $daftarUmrah->first())
 <div class="table table-responsive card">
     <table class="table table-bordered table-striped">
         <thead>
             <tr>
-                    @foreach($jamaahs->first()->getAttributes() as $key => $value)
+                    @foreach($daftarUmrah->first()->getAttributes() as $key => $value)
                         @if ($key !== 'id')
                             <th>{{ ucfirst(str_replace('_', ' ', $key)) }}</th>
                         @endif
@@ -26,7 +26,7 @@
             </tr>
         </thead>
         <tbody>
-            @foreach($jamaahs as $jamaah)
+            @foreach($daftarUmrah as $jamaah)
                 <tr>
                     @foreach($jamaah->getAttributes() as $key => $value)
                         @if ($key !== 'id')

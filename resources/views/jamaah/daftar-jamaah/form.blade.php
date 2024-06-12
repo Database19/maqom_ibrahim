@@ -1,17 +1,17 @@
 
 
 @extends('layouts.app')
-@if (Route::currentRouteName() === 'buku-tamu.create')
+@if (Route::currentRouteName() === 'daftar-jamaah.create')
     @section('content')
             <div class="container">
                 <h2>Tambah Jamaah</h2>
-                <form method="POST" action="{{ route('buku-tamu.store') }}" enctype="multipart/form-data">
+                <form method="POST" action="{{ route('daftar-jamaah.store') }}" enctype="multipart/form-data">
                     @csrf
 
                     <div class="row">
                         @php $fieldCount = 0; @endphp
                         @foreach ($jamaahFields as $field)
-                            @if ($field !== 'id' && $field !== 'created_at' && $field !== 'updated_at' && $field !== 'is_deleted' && $field !== 'members' && $field !== 'nama_foto' && $field !== 'parent_id' && $field !== 'is_register')
+                            @if ($field !== 'id' && $field !== 'created_at' && $field !== 'updated_at' && $field !== 'is_deleted' && $field !== 'members' && $field !== 'nama_foto' && $field !== 'parent_id' && $field !== 'is_register' && $field !== 'status')
                                 @php $fieldCount++; @endphp
                                 <div class="col-sm-6">
                                     <div class="form-group">
@@ -20,9 +20,9 @@
                                             <input type="text" class="form-control form-control-sm" name="{{ $field }}" id="{{ $field }}">
                                         @elseif ($field === 'foto')
                                             <div class="input-group">
-                                                <input type="text" class="form-control form-control-sm" name="{{ $field }}" id="{{ $field }}">
+                                                <input type="file" onchange="previewImage()" class="form-control form-control-sm" name="{{ $field }}" id="{{ $field }}">
                                                 <div class="input-group-append">
-                                                    <button type="button" class="btn btn-sm btn-secondary" data-bs-toggle="modal" data-bs-target="#fotoModal">Edit</button>
+                                                    <button type="button" class="btn btn-sm btn-secondary" data-bs-toggle="modal" data-bs-target="#fotoModal">Lihat Gambar</button>
                                                 </div>
                                             </div>
                                         @elseif ($field === 'nama_relasi')
@@ -79,7 +79,9 @@
                                                 <option value="member">Member</option>
                                             </select>
                                         @else
-                                            <input type="{{ $field === 'email' ? 'email' : 'text' }}" class="form-control form-control-sm" name="{{ $field }}">
+                                            <input type="{{ $field === 'email' ? 'email' : 'text' }}" @if ($field == 'no_ktp')
+                                                maxlength="16"
+                                            @endif class="form-control form-control-sm" name="{{ $field }}" id="{{ $field }}">
                                         @endif
                                     </div>
                                 </div>
@@ -128,7 +130,7 @@
 
         <!-- Modal for Editing Photo -->
         <div class="modal fade" id="fotoModal" tabindex="-1" aria-labelledby="fotoModalLabel" aria-hidden="true">
-            <div class="modal-dialog" role="document">
+            <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
                         <h5 class="modal-title" id="fotoModalLabel">Edit Photo</h5>
@@ -138,14 +140,12 @@
                     </div>
                     <div class="modal-body">
                         <!-- Image preview -->
-                        <img id="previewImage" src="#" alt="Selected Image" style="max-width: 100%; height: auto;">
-
-                        <!-- File input for image selection -->
-                        <input type="file" name="edited_foto" id="edited_foto" class="form-control" onchange="previewImage()">
+                        <div class="d-flex justify-content-center">
+                            <img id="previewImage" src="#" alt="Selected Image" class="img-fluid">
+                        </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-sm btn-secondary" data-bs-dismiss="modal">Close</button>
-                        <button type="button" class="btn btn-sm btn-primary">Save changes</button>
+                        <button type="button" class="btn btn-sm btn-info" data-bs-dismiss="modal">Save</button>
                     </div>
                 </div>
             </div>
@@ -241,33 +241,44 @@
             }
 
             function previewImage() {
-                // Get the selected file input
-                var input = document.getElementById('edited_foto');
+                // Dapatkan input file yang dipilih
+                var input = document.getElementById('foto');
 
-                $('#foto').val(input.files[0].name);
-
-                // Ensure a file is selected
+                // Pastikan file telah dipilih
                 if (input.files && input.files[0]) {
                     var reader = new FileReader();
 
-                    // Set up the image preview
+                    // Siapkan tampilan gambar
                     reader.onload = function (e) {
                         document.getElementById('previewImage').src = e.target.result;
                         $('#data_foto').val(e.target.result);
                     };
 
-                    // Read the selected file as a data URL
+                    // Baca file yang dipilih sebagai URL data
                     reader.readAsDataURL(input.files[0]);
                 }
             }
 
+            // Pasang fungsi previewImage pada event onchange dari input #foto
+            document.getElementById('foto').addEventListener('change', previewImage);
+
             let selectedMembers = [];
 
             $(document).ready(function() {
+                $("#usia").on('change', function() {
+                    var usia = $(this).val();
+                    if (usia) {
+                        var currentYear = new Date().getFullYear();
+                        var tahunLahir = currentYear - usia;
+                        $("#tanggal_lahir").datepicker("setDate", new Date(tahunLahir, 0, 1));
+                    }
+                });
+
                 $("#tanggal_lahir").datepicker({
                     dateFormat: 'yy-mm-dd',
                     autoclose: true,
-                    minViewMode: "months",
+                    changeMonth: true,
+                    changeYear: true,
                     todayHighlight: true
                 });
 
@@ -469,19 +480,16 @@
             }
         </script>
     @endsection
-@elseif (Route::currentRouteName() === 'buku-tamu.show')
+@elseif (Route::currentRouteName() === 'daftar-jamaah.show')
 @section('content')
         <div class="container">
             <h2>View Jamaah</h2>
-            <form method="POST" action="{{ route('buku-tamu.store') }}">
+            <form method="POST" action="{{ route('daftar-jamaah.store') }}">
                 @csrf
-
                 <div class="row">
                     @php $fieldCount = 0; @endphp
-
-                    {{-- @php dd($dataJamaah->kecamatan) @endphp --}}
                     @foreach ($jamaahFields as $field)
-                        @if ($field !== 'id' && $field !== 'created_at' && $field !== 'updated_at' && $field !== 'is_deleted' && $field !== 'members' && $field !== 'parent_id')
+                        @if ($field !== 'id' && $field !== 'created_at' && $field !== 'updated_at' && $field !== 'is_deleted' && $field !== 'members' && $field !== 'parent_id' && $field !== 'nama_foto' && $field !== 'status' && $field !== 'is_register')
                             @php $fieldCount++; @endphp
                             <div class="col-sm-6">
                                 <div class="form-group">
@@ -492,7 +500,7 @@
                                             <div class="input-group">
                                                 <input type="text" disabled class="form-control form-control-sm" name="{{ $field }}" id="{{ $field }}">
                                                 <div class="input-group-append">
-                                                    <button type="button" class="btn btn-sm btn-secondary" data-bs-toggle="modal" data-bs-target="#fotoModal">Edit</button>
+                                                    <button type="button" class="btn btn-sm btn-secondary" data-bs-toggle="modal" data-bs-target="#fotoModal">Lihat Foto</button>
                                                 </div>
                                             </div>
                                         @elseif ($field === 'provinsi')
@@ -569,6 +577,33 @@
                 </div>
                 {{-- <button type="submit" class="btn btn-sm btn-primary mt-2">Submit</button> --}}
             </form>
+        </div>
+
+        <div class="modal fade" id="fotoModal" tabindex="-1" aria-labelledby="fotoModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="fotoModalLabel">Photo</h5>
+                        <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <!-- Image preview -->
+                        <div class="d-flex justify-content-center">
+                            <img src="{{ Storage::url($dataJamaah['foto']) }}" width="300" height="300" alt="" />
+                        </div>
+
+                        <!-- File input for image selection -->
+                        <div class="mt-3">
+                            {{-- <input type="file" name="edited_foto" id="edited_foto" class="form-control" onchange="previewImage()"> --}}
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-sm btn-info" data-bs-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
         </div>
 
     <!-- Your modal HTML structure -->
@@ -726,11 +761,11 @@
         }
     </script>
 @endsection
-@elseif (Route::currentRouteName() === 'buku-tamu.edit')
+@elseif (Route::currentRouteName() === 'daftar-jamaah.edit')
 @section('content')
             <div class="container">
                 <h2>Update Jamaah</h2>
-                <form method="POST" action="{{ route('buku-tamu.update', $dataJamaah->id) }}" enctype="multipart/form-data">
+                <form method="POST" action="{{ route('daftar-jamaah.update', $dataJamaah->id) }}" enctype="multipart/form-data">
                     @csrf
                     @method('PUT')
                     <div class="row">

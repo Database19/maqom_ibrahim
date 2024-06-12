@@ -1,9 +1,10 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Models\PaketUmrah;
 
 Route::get('/', function () {
-    return view('welcome');
+    return redirect()->route('login');
 });
 
 Auth::routes();
@@ -21,7 +22,7 @@ Route::middleware('auth')->group(function () {
 
     // Module
     Route::prefix('jamaahs')->group(function () {
-        Route::resource('/buku-tamu', \App\Http\Controllers\JamaahController::class)->names('buku-tamu');
+        Route::resource('/daftar-jamaah', \App\Http\Controllers\JamaahController::class)->names('daftar-jamaah');
         Route::resource('/daftar-umrah', \App\Http\Controllers\DaftarUmrahController::class)->names('daftar-umrah');
     });
 
@@ -49,4 +50,13 @@ Route::middleware('auth')->group(function () {
         return getVillages($districtId);
     })->name('api.villages');
 
+
+    // Find Rencana Keberangkatan
+    Route::get('api/rencana-keberangkatan/{kode_paket}', function ($kode_paket) {
+        return PaketUmrah::select('tanggal_keberangkatan')->where('kode_paket', $kode_paket)->first();
+    });
 });
+
+Route::post('buku-tamu', [\App\Http\Controllers\JamaahController::class, 'guest'])->name('buku-tamu');
+
+
