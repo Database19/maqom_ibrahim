@@ -70,8 +70,8 @@ class JamaahController extends Controller
         if ($request->hasFile('foto')) {
             $foto = $request->file('foto');
             $namaFile = $request->no_ktp . '.' . $foto->getClientOriginalExtension();
-            $fotoPath = $foto->storeAs('public/images/data/customer', $namaFile);
-            $pap = $fotoPath;
+            $fotoPath = $foto->move(public_path('images/data/customer'), $namaFile);
+            $pap = 'images/data/customer/' . $request->no_ktp . '.' . $foto->getClientOriginalExtension();
         }
 
 

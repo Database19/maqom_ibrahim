@@ -591,7 +591,7 @@
                     <div class="modal-body">
                         <!-- Image preview -->
                         <div class="d-flex justify-content-center">
-                            <img src="{{ Storage::url($dataJamaah['foto']) }}" width="300" height="300" alt="" />
+                            <img src="{{ asset($dataJamaah['foto']) }}" width="300" height="300" alt="" />
                         </div>
 
                         <!-- File input for image selection -->
